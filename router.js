@@ -17,7 +17,7 @@ router.get('/', (req, res) => {
         }
         else {
             // 通过express-art-template模板引擎进行页面渲染
-            res.render('index.html',data)
+            res.render('index.html', data)
         }
     })
 })
@@ -41,27 +41,36 @@ router.post('/add', (req, res) => {
 })
 
 // 删除
-router.post('/del', (req, res) => {
-    res.send('hello world11')
+router.get('/del', (req, res) => {
+    console.log(req.query.id)
+    operate.del(req.query.id,(error) => {
+        if (error) {
+            return res.status(500).send("Server Error")
+        }
+        res.redirect('/')
+    })
 })
 
 // 渲染更新页面
 router.get('/update', (req, res) => {
-    console.log(req.query.id)
-    res.render('update.html')
+    // console.log(req.query.id)
+    operate.findOne(req.query.id, (error, data) => {
+        if (error) {
+            return res.status(500).send("Server Error")
+        }
+        res.render('update.html', {student: data})
+    })
 })
 
 // 更新
 router.post('/update', (req, res) => {
     console.log(req.body)
-    // operate.update(id,req.body,(error,data) => {
-    //     if (error) {
-    //         throw error
-    //     }
-    //     else {
-    //         res.redirect('/')
-    //     }
-    // })
+    operate.update(req.body,(error,data) => {
+        if (error) {
+            return res.status(500).send("Server Error")
+        }
+        res.redirect('/')
+    })
 })
 
 // 其他不存在的路由404页面

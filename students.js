@@ -16,6 +16,23 @@ exports.find = function (callback) {
         }
     })
 }
+
+// 通过id查找对应的学生对象
+exports.findOne = function(id,callback){
+    fs.readFile(dbPath,(error,data) => {
+        if (error) {
+            callback(error)
+        }
+        else {
+            let target = JSON.parse(data).students.find((item) => {
+               return item.id == id
+            })
+            callback(null,target)
+        }
+    })
+}
+
+
 // 添加保存
 exports.save = function (student, callback) {
     fs.readFile(dbPath, 'utf-8', (error, data) => {
@@ -24,7 +41,7 @@ exports.save = function (student, callback) {
         }
         else {
             let studentsArr = JSON.parse(data).students
-            student.id = studentsArr[studentsArr.length - 1].id + 1
+            student.id = studentsArr.length!=0?studentsArr[studentsArr.length - 1].id + 1:1
             // console.log(student)
             studentsArr.push(student)
             let newStudentsData = JSON.stringify({ students: studentsArr })
@@ -41,7 +58,7 @@ exports.save = function (student, callback) {
     })
 }
 // 更新修改
-exports.update = function (id,student, callback) {
+exports.update = function (student, callback) {
     fs.readFile(dbPath, 'utf-8', (error, data) => {
         if (error) {
             return callback(error)
@@ -49,11 +66,10 @@ exports.update = function (id,student, callback) {
         else { 
             let studentsArr = JSON.parse(data).students
             studentsArr.some((item) => {
-                if (item.id == id) {
-                    item.name = student.name
-                    item.age = student.age
-                    item.sex = student.sex
-                    item.hobby = student.hobby
+                if (item.id == student.id) {
+                    for(var key in item){
+                        item[key] = student[key]
+                    }
                     return true
                 }
             })

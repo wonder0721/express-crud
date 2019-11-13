@@ -15,29 +15,33 @@
             <h1>Update students <small><a href="/">回到首页</a></small></h1>
         </div>
         <form method="POST" action="/update">
+            <!-- 用隐藏表单捕获get传递的参数 -->
+            <input type="hidden" name="id" value="{{student.id}}">
             <div class="form-group">
                 <label for="name">姓名</label>
-                <input type="text" class="form-control" id="name" name="name" placeholder="请输入姓名">
+                <input type="text" class="form-control" id="name" name="name" value="{{student.name}}">
             </div>
             <div class="form-group">
                 <label for="age">年龄</label>
-                <input type="text" class="form-control" id="age" name="age" placeholder="请输入年龄">
+                <input type="text" class="form-control" id="age" name="age" value="{{student.age}}">
             </div>
-
-            <div class="radio">
-                <label>
-                    <input type="radio" name="sex" id="sex" value="男" checked>
-                    男
-                </label>
-                <label>
-                    <input type="radio" name="sex" id="sex" value="女">
-                    女
-                </label>
+            <div class="form-group">
+                <lable for="radio">性别</lable>
+                <div class="radio" id="radio">
+                    <label>
+                        <input type="radio" name="sex" id="sex" value="男" checked>
+                        男
+                    </label>
+                    <label>
+                        <input type="radio" name="sex" id="sex" value="女">
+                        女
+                    </label>
+                </div>
             </div>
 
             <div class="form-group">
                 <label for="hobby">爱好</label>
-                <textarea id="hobby" class="form-control" rows="3" name="hobby" placeholder="请输入爱好"></textarea>
+                <textarea id="hobby" class="form-control" rows="3" name="hobby">{{student.hobby}}</textarea>
             </div>
             <button type="submit" class="btn btn-default">更新</button>
         </form>
