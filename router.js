@@ -42,7 +42,7 @@ router.post('/add', (req, res) => {
 
 // 删除
 router.get('/del', (req, res) => {
-    console.log(req.query.id)
+    // console.log(req.query.id)
     operate.del(req.query.id,(error) => {
         if (error) {
             return res.status(500).send("Server Error")
