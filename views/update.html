@@ -16,7 +16,7 @@
         </div>
         <form method="POST" action="/update">
             <!-- 用隐藏表单捕获get传递的参数 -->
-            <input type="hidden" name="id" value="{{student.id}}">
+            <input type="hidden" name="id" value="{{student._id}}">
             <div class="form-group">
                 <label for="name">姓名</label>
                 <input type="text" class="form-control" id="name" name="name" value="{{student.name}}">
