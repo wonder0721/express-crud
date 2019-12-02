@@ -56,7 +56,8 @@ router.get('/update', (req, res) => {
 // 更新
 router.post('/update', (req, res) => {
     console.log(req.body)
-    Students.updateOne({_id: mongoose.Types.ObjectId(req.body._id)},{$set:req.body}).then(() => {
+    console.log(req.body.id)
+    Students.updateOne({_id: mongoose.Types.ObjectId(req.body.id.replace(/\"/g, ''))},{$set:req.body}).then(() => {
         res.redirect('/')
     }).catch((err) => {
         res.status(500).send("Server Error")
