@@ -1,9 +1,10 @@
 const fs = require('fs')
 const express = require('express')
+const mongoose = require('mongoose')
 // 引入文件操作的异步API
 // const operate = require('./students')
-const Crud = require('./db')
 // const url = require('url')
+const Students = require('./db')
 
 // 创建一个路由容器
 const router = express.Router()
@@ -12,10 +13,9 @@ const router = express.Router()
 
 // 渲染首页展示页面
 router.get('/', (req, res) => {
-    Crud.find().then((data) => {
-        res.render('index.html', {students:data})
-    }).catch((err) => {
-        res.status(500).send("Server Error")
+    Students.find().then((data) => {
+        // console.log(data)
+        res.render('index.html',{students: data})
     })
 })
 
@@ -26,35 +26,29 @@ router.get('/add', (req, res) => {
 
 // 添加
 router.post('/add', (req, res) => {
-    Crud.save(req.body, (error) => {
-        if (error) {
-            res.status(500).send("Server Error")
-        }
-        // 没有错误就跳转回首页
-        else {
-            res.redirect('/')
-        }
+    console.log(req.body)
+    new Students(req.body).save().then(() => {
+        res.redirect('/')
+    }).catch((err) => {
+        res.status(500).send("Server Error")
     })
 })
 
 // 删除
 router.get('/del', (req, res) => {
     // console.log(req.query.id)
-    Crud.del(req.query.id,(error) => {
-        if (error) {
-            return res.status(500).send("Server Error")
-        }
+    Students.deleteOne({_id: mongoose.Types.ObjectId(req.query.id)}).then(() => {
         res.redirect('/')
+    }).catch((err) => {
+        res.status(500).send("Server Error")
     })
 })
 
 // 渲染更新页面
 router.get('/update', (req, res) => {
     // console.log(req.query.id)
-    Crud.findOne(req.query.id, (error, data) => {
-        if (error) {
-            return res.status(500).send("Server Error")
-        }
+    Students.findOne({_id: mongoose.Types.ObjectId(req.query.id)}).then((data) => {
+    // console.log(data)
         res.render('update.html', {student: data})
     })
 })
@@ -62,11 +56,11 @@ router.get('/update', (req, res) => {
 // 更新
 router.post('/update', (req, res) => {
     console.log(req.body)
-    Crud.update(req.body,(error,data) => {
-        if (error) {
-            return res.status(500).send("Server Error")
-        }
+    console.log(req.body.id)
+    Students.updateOne({_id: mongoose.Types.ObjectId(req.body.id.replace(/\"/g, ''))},{$set:req.body}).then(() => {
         res.redirect('/')
+    }).catch((err) => {
+        res.status(500).send("Server Error")
     })
 })
 
